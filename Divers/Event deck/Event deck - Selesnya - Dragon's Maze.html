@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+	<!-- https://getbootstrap.com/docs/5.2/getting-started/introduction/ -->
+
+	<style>
+		body {
+			background:
+					linear-gradient(rgba(255, 255, 255, .5), rgba(255, 255, 255, .5)),
+					url("https://www.magic-ville.com/fr/scan_art?imid=24207")
+					no-repeat
+					fixed
+					top;
+			background-size: cover;
+		}
+		/* The snackbar - position it at the bottom and in the middle of the screen */
+		#snackbar {
+			visibility: hidden; /* Hidden by default. Visible on click */
+			min-width: 250px; /* Set a default minimum width */
+			margin-left: -125px; /* Divide value of min-width by 2 */
+			background-color: #333; /* Black background color */
+			color: #fff; /* White text color */
+			text-align: center; /* Centered text */
+			border-radius: 2px; /* Rounded borders */
+			padding: 16px; /* Padding */
+			position: fixed; /* Sit on top of the screen */
+			z-index: 1; /* Add a z-index if needed */
+			left: 50%; /* Center the snackbar */
+			bottom: 30px; /* 30px from the bottom */
+		}
+
+		/* Show the snackbar when clicking on a button (class added with JavaScript) */
+		#snackbar.show {
+			visibility: visible; /* Show the snackbar */
+			/* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+			However, delay the fade out process for 2.5 seconds */
+			-webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+			animation: fadein 0.5s, fadeout 0.5s 2.5s;
+		}
+
+		/* Animations to fade the snackbar in and out */
+		@-webkit-keyframes fadein {
+			from {bottom: 0; opacity: 0;}
+			to {bottom: 30px; opacity: 1;}
+		}
+
+		@keyframes fadein {
+			from {bottom: 0; opacity: 0;}
+			to {bottom: 30px; opacity: 1;}
+		}
+
+		@-webkit-keyframes fadeout {
+			from {bottom: 30px; opacity: 1;}
+			to {bottom: 0; opacity: 0;}
+		}
+
+		@keyframes fadeout {
+			from {bottom: 30px; opacity: 1;}
+			to {bottom: 0; opacity: 0;}
+		}
+	</style>
+
+	<title>Dragon's Maze</title>
+</head>
+<body class="container d-flex flex-column">
+
+<h1>Event deck - Selesnya - Dragon's Maze</h1>
+
+<div>
+<a 
+	href="https://deckstats.net/decks/17808/351437-event-deck-dragon-s-maze-seles" 
+	class="mb-2 btn btn-light">
+	deckstats.net link
+</a>
+<button type="button" class="btn btn-primary mb-2" data-copy-deck>Copy deck code</button>
+<pre data-deck-code>
+//Event Deck Dragon's Maze : Selesnya tokens!
+//https://deckstats.net/decks/17808/351437-event-deck-dragon-s-maze-seles
+
+4 Evolving Wilds
+6 Forest
+7 Plains
+1 Swamp
+4 Selesnya Guildgate
+1 Grove of the Guardian
+1 Godless Shrine
+1 Champion of Lambholt
+2 Doomed Traveler
+1 Geist-Honored Monk
+1 Odric, Master Tactician
+2 Vitu-Ghazi Guildmage
+1 Wayfaring Temple
+1 Advent of the Wurm
+4 Call of the Conclave
+1 Growing Ranks
+1 Increasing Devotion
+3 Lingering Souls
+4 Intangible Virtue
+1 Parallel Lives
+2 Rancor
+3 Rootborn Defenses
+4 Selesnya Charm
+4 Wake the Reflections
+
+//Sideboard
+SB: 4 Centaur Healer
+SB: 3 Druid's Deliverance
+SB: 4 Pacifism
+SB: 1 Rogue's Passage
+SB: 3 Sundering Growth
+</pre>
+</div>
+
+<div id="snackbar">Deck code copied !</div>
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		document.querySelector('[data-copy-deck]').addEventListener('click', () => {
+			navigator.clipboard.writeText(
+				document.querySelector('[data-deck-code]').textContent
+			);
+			const toast = document.getElementById('snackbar');
+			toast.classList.add('show');
+			setTimeout(() => {
+				toast.classList.remove('show');
+			}, 3000);
+		});
+	});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+	<!-- https://getbootstrap.com/docs/5.2/getting-started/introduction/ -->
+
+	<style>
+		body {
+			background:
+					linear-gradient(rgba(255, 255, 255, .5), rgba(255, 255, 255, .5)),
+					url("https://media.magic.wizards.com/image_legacy_migration/images/magic/daily/arcana/arc1341_marath.jpg")
+					no-repeat
+					top;
+			background-size: cover;
+			background-attachment: fixed;
+		}
+		/* The snackbar - position it at the bottom and in the middle of the screen */
+		#snackbar {
+			visibility: hidden; /* Hidden by default. Visible on click */
+			min-width: 250px; /* Set a default minimum width */
+			margin-left: -125px; /* Divide value of min-width by 2 */
+			background-color: #333; /* Black background color */
+			color: #fff; /* White text color */
+			text-align: center; /* Centered text */
+			border-radius: 2px; /* Rounded borders */
+			padding: 16px; /* Padding */
+			position: fixed; /* Sit on top of the screen */
+			z-index: 1; /* Add a z-index if needed */
+			left: 50%; /* Center the snackbar */
+			bottom: 30px; /* 30px from the bottom */
+		}
+
+		/* Show the snackbar when clicking on a button (class added with JavaScript) */
+		#snackbar.show {
+			visibility: visible; /* Show the snackbar */
+			/* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+			However, delay the fade out process for 2.5 seconds */
+			-webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+			animation: fadein 0.5s, fadeout 0.5s 2.5s;
+		}
+
+		/* Animations to fade the snackbar in and out */
+		@-webkit-keyframes fadein {
+			from {bottom: 0; opacity: 0;}
+			to {bottom: 30px; opacity: 1;}
+		}
+
+		@keyframes fadein {
+			from {bottom: 0; opacity: 0;}
+			to {bottom: 30px; opacity: 1;}
+		}
+
+		@-webkit-keyframes fadeout {
+			from {bottom: 30px; opacity: 1;}
+			to {bottom: 0; opacity: 0;}
+		}
+
+		@keyframes fadeout {
+			from {bottom: 30px; opacity: 1;}
+			to {bottom: 0; opacity: 0;}
+		}
+	</style>
+
+	<title>Nature of the Beast</title>
+</head>
+<body class="container d-flex flex-column">
+
+<h1>Commander - Marath - Nature of the Beast</h1>
+
+<div>
+<a 
+	href="https://deckstats.net/decks/117844/1141150-nature-of-the-beast-marath-rgw" 
+	class="mb-2 btn btn-light">
+	deckstats.net link
+</a>
+<button type="button" class="btn btn-primary mb-2" data-copy-deck>Copy deck code</button>
+<pre data-deck-code>
+//Nature of the Beast - Marath, RGW, c13
+//https://deckstats.net/decks/117844/1141150-nature-of-the-beast-marath-rgw
+
+//Commander
+1 Marath, Will of the Wild # !Commander
+
+//Lands
+1 Boros Garrison
+1 Boros Guildgate
+1 Command Tower
+1 Contested Cliffs
+1 Drifting Meadow
+1 Evolving Wilds
+8 Forest
+1 Forgotten Cave
+1 Gruul Guildgate
+1 Homeward Path
+1 Jungle Shrine
+1 Khalni Garden
+1 Mosswort Bridge
+5 Mountain
+1 Naya Panorama
+1 New Benalia
+1 Opal Palace
+4 Plains
+1 Rupture Spire
+1 Secluded Steppe
+1 Selesnya Guildgate
+1 Selesnya Sanctuary
+1 Slippery Karst
+1 Smoldering Crater
+1 Temple of the False God
+1 Tranquil Thicket
+1 Vitu-Ghazi, the City-Tree
+1 Vivid Crag
+
+//Spells
+1 Behemoth Sledge
+1 Boros Charm
+1 Cultivate
+1 Curse of Chaos
+1 Curse of Predation
+1 Curse of the Forsaken
+1 Darksteel Mutation
+1 Druidic Satchel
+1 Fiery Justice
+1 Fireball
+1 Fires of Yavimaya
+1 From the Ashes
+1 Harmonize
+1 Hull Breach
+1 Mystic Barrier
+1 Naya Charm
+1 One Dozen Eyes
+1 Rain of Thorns
+1 Restore
+1 Savage Twister
+1 Seer's Sundial
+1 Slice and Dice
+1 Slice in Twain
+1 Sol Ring
+1 Spawning Grounds
+1 Sprouting Vines
+1 Street Spasm
+1 Swiftfoot Boots
+1 Tempt with Discovery
+1 Tower of Fortunes
+1 War Cadence
+1 Warstorm Surge
+1 Where Ancients Tread
+1 Witch Hunt
+1 Wrath of God
+
+//Creatures
+1 Archangel
+1 Avenger of Zendikar
+1 Baloth Woodcrasher
+1 Crater Hellion
+1 Deadwood Treefolk
+1 Drumhunter
+1 Eternal Dragon
+1 Gahiji, Honored One
+1 Grazing Gladehart
+1 Krosan Tusker
+1 Krosan Warchief
+1 Magus of the Arena
+1 Mayael the Anima
+1 Mold Shambler
+1 Naya Soulbeast
+1 Rakeclaw Gargantuan
+1 Rampaging Baloths
+1 Ravenous Baloth
+1 Spellbreaker Behemoth
+1 Spitebellows
+1 Terra Ravager
+1 Valley Rannet
+</pre>
+</div>
+
+<div id="snackbar">Deck code copied !</div>
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		document.querySelector('[data-copy-deck]').addEventListener('click', () => {
+			navigator.clipboard.writeText(
+				document.querySelector('[data-deck-code]').textContent
+			);
+			const toast = document.getElementById('snackbar');
+			toast.classList.add('show');
+			setTimeout(() => {
+				toast.classList.remove('show');
+			}, 3000);
+		});
+	});
+</script>
+
+</body>
+</html>
