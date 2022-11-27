@@ -75,7 +75,7 @@
 			<tr class="table-light">
 				<th>Version</th>
 				<td>1</td>
-				<th>Author</th>
+				<th>Auteur</th>
 				<td>{author}</td>
 			</tr>
 		</table>
@@ -83,16 +83,16 @@
 </div>
 
 <div>
-<a 
-	href="{deckstatsLink}"
-	class="mb-2 btn btn-light">
-	lien deckstats.net
-</a>
-<button type="button" class="btn btn-primary mb-2" data-copy-deck>Copy deck code</button>
-<pre data-deck-code>{deckCode}</pre>
+	<button type="button" class="btn btn-primary mb-2" data-copy-deck>Copier deck</button>
+	<a
+			href="{deckstatsLink}"
+			class="mb-2 btn btn-light">
+		lien deckstats.net
+	</a>
+	<pre data-deck-code>{deckCode}</pre>
 </div>
 
-<div id="snackbar">Deck code copied !</div>
+<div id="snackbar">Deck copié dans le presse-papier !</div>
 
 <script>
 	document.addEventListener('DOMContentLoaded', () => {
