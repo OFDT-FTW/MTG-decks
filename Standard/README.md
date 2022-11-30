@@ -14,13 +14,13 @@ Le Standard tourne à chaque septembre et garde les extensions sorties depuis le
 	<tr>
 		<td rowspan="4">2021 → 2023</td>
 		<td>MID</td>
-		<td>Innistrad : noce écarlate</td>
+		<td>Innistrad : chasse de minuit</td>
 		<td>Innistrad: Midnight Hunt</td>
 		<td><a href="https://mtg.fandom.com/wiki/Innistrad:_Midnight_Hunt">lien</a></td>
 	</tr>
 	<tr>
 		<td>VOW</td>
-		<td>Innistrad : chasse de minuit</td>
+		<td>Innistrad : noce écarlate</td>
 		<td>Innistrad: Crimson Vow</td>
 		<td><a href="https://mtg.fandom.com/wiki/Innistrad:_Crimson_Vow">lien</a></td>
 	</tr>
@@ -49,22 +49,24 @@ Le Standard tourne à chaque septembre et garde les extensions sorties depuis le
 		<td>The Brothers' War</td>
 		<td><a href="https://mtg.fandom.com/wiki/The_Brothers%27_War">lien</a></td>
 	</tr>
-	<tr>
+	<tr style="background-color: darkred">
 		<td>ONE</td>
 		<td>Tous Phyrexians</td>
 		<td>Phyrexia: All Will Be One</td>
 		<td><a href="https://mtg.fandom.com/wiki/Phyrexia:_All_Will_Be_One">lien</a></td>
 	</tr>
-	<tr>
+	<tr style="background-color: darkred">
 		<td>?</td>
 		<td>?</td>
 		<td>March of the Machine</td>
 		<td><a href="https://mtg.fandom.com/wiki/March_of_the_Machine">lien</a></td>
 	</tr>
-	<tr>
+	<tr style="background-color: darkred">
 		<td>?</td>
 		<td>?</td>
 		<td>March of the Machine: The Aftermath</td>
 		<td><a href="https://mtg.fandom.com/wiki/March_of_the_Machine:_The_Aftermath">lien</a></td>
 	</tr>
 </table>
+
+Les extensions en <span style="background-color: darkred">rouge</span> ne sont pas encore sorties

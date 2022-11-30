@@ -11,6 +11,6 @@ Pour le nom du fichier, mettre le code de l'extension principale du deck (s'il y
    5. Remplacer `{deckstatsLink}` par le lien deckstats.net. Il est générable via Cockatrice en faisant `Éditeur de deck -> Envoyer le deck vers le service en ligne -> Analyser le deck (deckstats.net)`.<br/>
    Si pas envie de mettre un lien là, supprimer la balise `<a>` avec comme `href="{deckstatsLink}"`
    6. Remplacer `{deckCode}` par le code du deck. <br/>
-   Il est générable via cockatrice : `Éditeur de deck -> Coier le deck dans le presse-papier -> Avec annotations`.
+   Il est générable via cockatrice : `Éditeur de deck -> Copier le deck dans le presse-papier -> Avec annotations`.
 3. Ouvrir le fichier dans son navigateur pour vérifier que tout s'affiche bien 
 4. Commiter et ouvrir la PR vers le repo principal
