@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+	<!-- https://getbootstrap.com/docs/5.2/getting-started/introduction/ -->
+
+	<style>
+		body {
+			background:
+					linear-gradient(rgba(255, 255, 255, .5), rgba(255, 255, 255, .5)),
+					url("https://i.imgur.com/LdOBU1I.jpg")
+					no-repeat
+					fixed
+					top;
+			background-size: cover;
+		}
+		/* The snackbar - position it at the bottom and in the middle of the screen */
+		#snackbar {
+			visibility: hidden; /* Hidden by default. Visible on click */
+			min-width: 250px; /* Set a default minimum width */
+			margin-left: -125px; /* Divide value of min-width by 2 */
+			background-color: #333; /* Black background color */
+			color: #fff; /* White text color */
+			text-align: center; /* Centered text */
+			border-radius: 2px; /* Rounded borders */
+			padding: 16px; /* Padding */
+			position: fixed; /* Sit on top of the screen */
+			z-index: 1; /* Add a z-index if needed */
+			left: 50%; /* Center the snackbar */
+			bottom: 30px; /* 30px from the bottom */
+		}
+
+		/* Show the snackbar when clicking on a button (class added with JavaScript) */
+		#snackbar.show {
+			visibility: visible; /* Show the snackbar */
+			/* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+			However, delay the fade out process for 2.5 seconds */
+			-webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+			animation: fadein 0.5s, fadeout 0.5s 2.5s;
+		}
+
+		/* Animations to fade the snackbar in and out */
+		@-webkit-keyframes fadein {
+			from {bottom: 0; opacity: 0;}
+			to {bottom: 30px; opacity: 1;}
+		}
+
+		@keyframes fadein {
+			from {bottom: 0; opacity: 0;}
+			to {bottom: 30px; opacity: 1;}
+		}
+
+		@-webkit-keyframes fadeout {
+			from {bottom: 30px; opacity: 1;}
+			to {bottom: 0; opacity: 0;}
+		}
+
+		@keyframes fadeout {
+			from {bottom: 30px; opacity: 1;}
+			to {bottom: 0; opacity: 0;}
+		}
+	</style>
+
+	<title>{DeckTitle}</title>
+</head>
+<body class="container d-flex flex-column">
+
+<h1>{DeckName}</h1>
+
+<div class="row">
+	<div class="col-4">
+		<table class="table">
+			<tr class="table-light">
+				<th>Version</th>
+				<td>1</td>
+				<th>Auteur</th>
+				<td>{author}</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<div>
+	<button type="button" class="btn btn-primary mb-2" data-copy-deck>Copier deck</button>
+	<a
+			href="{deckstatsLink}"
+			class="mb-2 btn btn-light">
+		lien deckstats.net
+	</a>
+	<pre data-deck-code>{deckCode}</pre>
+</div>
+
+<div id="snackbar">Deck copié dans le presse-papier !</div>
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		document.querySelector('[data-copy-deck]').addEventListener('click', () => {
+			navigator.clipboard.writeText(
+				document.querySelector('[data-deck-code]').textContent
+			);
+			const toast = document.getElementById('snackbar');
+			toast.classList.add('show');
+			setTimeout(() => {
+				toast.classList.remove('show');
+			}, 3000);
+		});
+	});
+</script>
+
+</body>
+</html>

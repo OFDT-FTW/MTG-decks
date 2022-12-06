@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+	<!-- https://getbootstrap.com/docs/5.2/getting-started/introduction/ -->
+
+	<style>
+		body {
+			background:
+					linear-gradient(rgba(255, 255, 255, .5), rgba(255, 255, 255, .5)),
+					url("https://i.pinimg.com/originals/d1/51/a1/d151a13f7a863b4bf90775c4f459925c.jpg")
+					no-repeat
+					fixed
+					top;
+			background-size: cover;
+		}
+		/* The snackbar - position it at the bottom and in the middle of the screen */
+		#snackbar {
+			visibility: hidden; /* Hidden by default. Visible on click */
+			min-width: 250px; /* Set a default minimum width */
+			margin-left: -125px; /* Divide value of min-width by 2 */
+			background-color: #333; /* Black background color */
+			color: #fff; /* White text color */
+			text-align: center; /* Centered text */
+			border-radius: 2px; /* Rounded borders */
+			padding: 16px; /* Padding */
+			position: fixed; /* Sit on top of the screen */
+			z-index: 1; /* Add a z-index if needed */
+			left: 50%; /* Center the snackbar */
+			bottom: 30px; /* 30px from the bottom */
+		}
+
+		/* Show the snackbar when clicking on a button (class added with JavaScript) */
+		#snackbar.show {
+			visibility: visible; /* Show the snackbar */
+			/* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+			However, delay the fade out process for 2.5 seconds */
+			-webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+			animation: fadein 0.5s, fadeout 0.5s 2.5s;
+		}
+
+		/* Animations to fade the snackbar in and out */
+		@-webkit-keyframes fadein {
+			from {bottom: 0; opacity: 0;}
+			to {bottom: 30px; opacity: 1;}
+		}
+
+		@keyframes fadein {
+			from {bottom: 0; opacity: 0;}
+			to {bottom: 30px; opacity: 1;}
+		}
+
+		@-webkit-keyframes fadeout {
+			from {bottom: 30px; opacity: 1;}
+			to {bottom: 0; opacity: 0;}
+		}
+
+		@keyframes fadeout {
+			from {bottom: 30px; opacity: 1;}
+			to {bottom: 0; opacity: 0;}
+		}
+	</style>
+
+	<title>Guided By Nature</title>
+</head>
+<body class="container d-flex flex-column">
+
+<h1>Commander - Freyalise - Guided by nature</h1>
+
+<div>
+	<button type="button" class="btn btn-primary mb-2" data-copy-deck>Copier deck</button>
+	<a
+		href="https://deckstats.net/decks/23401/1065068-guided-by-nature-original-deck"
+		class="mb-2 btn btn-light">
+		lien deckstats.net
+	</a>
+	<pre data-deck-code>
+//Guided by Nature - Original Deck 2014
+//https://deckstats.net/decks/23401/1065068-guided-by-nature-original-deck
+
+//Commander
+1 Freyalise, Llanowar's Fury
+
+//Lands
+1 Crystal Vein
+1 Evolving Wilds
+6 Forest
+6 Forest
+6 Forest
+7 Forest
+1 Gargoyle Castle
+1 Ghost Quarter
+1 Haunted Fengraf
+1 Havenwood Battleground
+1 Jungle Basin
+1 Myriad Landscape
+1 Oran-Rief, the Vastwood
+1 Slippery Karst
+1 Terramorphic Expanse
+1 Tranquil Thicket
+
+//Artifacts
+1 Assault Suit
+1 Commander's Sphere
+1 Emerald Medallion
+1 Loreseeker's Stone
+1 Moss Diamond
+1 Predator, Flagship
+1 Seer's Sundial
+1 Skullclamp
+1 Sol Ring
+1 Swiftfoot Boots
+
+//Enchantments
+1 Beastmaster Ascension
+1 Song of the Dryads
+1 Wolfcaller's Howl
+
+//Instants
+1 Fresh Meat
+1 Harrow
+
+//Sorceries
+1 Collective Unconscious
+1 Desert Twister
+1 Grim Flowering
+1 Hunting Triad
+1 Overrun
+1 Overwhelming Stampede
+1 Praetor's Counsel
+1 Sylvan Offering
+1 Wave of Vitriol
+1 Whirlwind
+
+//Creatures
+1 Creeperhulk
+1 Drove of Elves
+1 Elvish Archdruid
+1 Elvish Mystic
+1 Elvish Skysweeper
+1 Elvish Visionary
+1 Essence Warden
+1 Ezuri, Renegade Leader
+1 Farhaven Elf
+1 Grave Sifter
+1 Immaculate Magistrate
+1 Imperious Perfect
+1 Joraga Warcaller
+1 Lifeblood Hydra
+1 Llanowar Elves
+1 Lys Alana Huntmaster
+1 Masked Admirers
+1 Priest of Titania
+1 Primordial Sage
+1 Rampaging Baloths
+1 Reclamation Sage
+1 Siege Behemoth
+1 Silklash Spider
+1 Soul of the Harvest
+1 Sylvan Ranger
+1 Sylvan Safekeeper
+1 Terastodon
+1 Thornweald Archer
+1 Thunderfoot Baloth
+1 Timberwatch Elf
+1 Titania's Chosen
+1 Titania, Protector of Argoth
+1 Tornado Elemental
+1 Wellwisher
+1 Wolfbriar Elemental
+1 Wood Elves
+1 Wren's Run Packmaster
+	</pre>
+</div>
+
+<div id="snackbar">Deck copié dans le presse-papier !</div>
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		document.querySelector('[data-copy-deck]').addEventListener('click', () => {
+			navigator.clipboard.writeText(
+				document.querySelector('[data-deck-code]').textContent
+			);
+			const toast = document.getElementById('snackbar');
+			toast.classList.add('show');
+			setTimeout(() => {
+				toast.classList.remove('show');
+			}, 3000);
+		});
+	});
+</script>
+
+</body>
+</html>
