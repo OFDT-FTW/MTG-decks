@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+	<!-- https://getbootstrap.com/docs/5.2/getting-started/introduction/ -->
+
+	<style>
+		body {
+			background:
+					linear-gradient(rgba(255, 255, 255, .5), rgba(255, 255, 255, .5)),
+					url("https://www.artofmtg.com/wp-content/uploads/2020/11/Abomination-of-Llanowar-Commander-Legends-MtG-Art.jpg")
+					no-repeat
+					fixed
+					top;
+			background-size: cover;
+		}
+		/* The snackbar - position it at the bottom and in the middle of the screen */
+		#snackbar {
+			visibility: hidden; /* Hidden by default. Visible on click */
+			min-width: 250px; /* Set a default minimum width */
+			margin-left: -125px; /* Divide value of min-width by 2 */
+			background-color: #333; /* Black background color */
+			color: #fff; /* White text color */
+			text-align: center; /* Centered text */
+			border-radius: 2px; /* Rounded borders */
+			padding: 16px; /* Padding */
+			position: fixed; /* Sit on top of the screen */
+			z-index: 1; /* Add a z-index if needed */
+			left: 50%; /* Center the snackbar */
+			bottom: 30px; /* 30px from the bottom */
+		}
+
+		/* Show the snackbar when clicking on a button (class added with JavaScript) */
+		#snackbar.show {
+			visibility: visible; /* Show the snackbar */
+			/* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+			However, delay the fade out process for 2.5 seconds */
+			-webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+			animation: fadein 0.5s, fadeout 0.5s 2.5s;
+		}
+
+		/* Animations to fade the snackbar in and out */
+		@-webkit-keyframes fadein {
+			from {bottom: 0; opacity: 0;}
+			to {bottom: 30px; opacity: 1;}
+		}
+
+		@keyframes fadein {
+			from {bottom: 0; opacity: 0;}
+			to {bottom: 30px; opacity: 1;}
+		}
+
+		@-webkit-keyframes fadeout {
+			from {bottom: 30px; opacity: 1;}
+			to {bottom: 0; opacity: 0;}
+		}
+
+		@keyframes fadeout {
+			from {bottom: 30px; opacity: 1;}
+			to {bottom: 0; opacity: 0;}
+		}
+	</style>
+
+	<title>BG La mort des elfes</title>
+</head>
+<body class="container d-flex flex-column">
+
+<h1>BG La mort des elfes</h1>
+
+<div class="row">
+	<div class="col-4">
+		<table class="table">
+			<tr class="table-light">
+				<th>Version</th>
+				<td>1</td>
+				<th>Auteur</th>
+				<td>Val</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<div>
+	<button type="button" class="btn btn-primary mb-2" data-copy-deck>Copier deck</button>
+	<a
+			target="_blank"
+			href="https://deckstats.net/decks/218462/3635829-bg-la-mort-des-elfes"
+			class="mb-2 btn btn-light"
+	>
+		lien deckstats.net
+	</a>
+
+	<details>
+		<summary>Code du deck</summary>
+		<pre data-deck-code>
+	//Main
+	1 Abomination of Llanowar #!Commander
+	1 Allosaurus Shepherd
+	1 Arcane Signet
+	1 Beast Whisperer
+	1 Canopy Tactician
+	1 Charge Through
+	1 Circle of Dreams Druid
+	1 Command Tower
+	1 Commander's Sphere
+	1 Darkbore Pathway // Slitherbore Pathway
+	1 Deadly Dispute
+	1 Deathbloom Ritualist
+	1 Deathcap Glade
+	1 Door of Destinies
+	1 Dwynen, Gilt-Leaf Daen
+	1 Elven Ambush
+	1 Elvish Archdruid
+	1 Elvish Eulogist
+	1 Elvish Herder
+	1 Elvish Lyrist
+	1 Elvish Mystic
+	1 Elvish Pioneer
+	1 Elvish Scrapper
+	1 Elvish Visionary
+	1 Elvish Warmaster
+	1 Fabled Passage
+	1 Fanatical Strength
+	1 Fell the Profane // Fell Mire
+	8 Forest
+	1 Fyndhorn Elves
+	1 Galadhrim Brigade
+	1 Gilt-Leaf Palace
+	1 Glissa Sunslayer
+	1 Golgari Rot Farm
+	1 Grim Backwoods
+	1 Haldir, Lórien Lieutenant
+	1 Harald Unites the Elves
+	1 Haunt of the Dead Marshes
+	1 Herald's Horn
+	1 Imperious Perfect
+	1 Joraga Treespeaker
+	1 Joraga Warcaller
+	1 Kagha, Shadow Archdruid
+	1 Koma's Faithful
+	1 Larger Than Life
+	1 Leaf-Crowned Visionary
+	1 Llanowar Augur
+	1 Llanowar Elves
+	1 Llanowar Mentor
+	1 Llanowar Scout
+	1 Lothlórien Blade
+	1 Lys Alana Huntmaster
+	1 Marwyn, the Nurturer
+	1 Massive Might
+	1 Necroblossom Snarl
+	1 Oracle of Mul Daya
+	1 Overgrown Tomb
+	1 Patchwork Banner
+	1 Path of Ancestry
+	1 Phyrexian Tower
+	1 Plumb the Forbidden
+	1 Poison-Tip Archer
+	1 Priest of Titania
+	1 Prowess of the Fair
+	1 Realmwalker
+	1 Reclamation Sage
+	1 Revitalizing Repast // Old-Growth Grove
+	1 Run Wild
+	1 Skemfar Avenger
+	1 Skyshroud Ranger
+	1 Skyway Sniper
+	1 Springbloom Druid
+	5 Swamp
+	1 Sylvan Messenger
+	1 Temple of Malady
+	1 Three Tree City
+	1 Thriving Grove
+	1 Twilight Mire
+	1 Tyvar Kell
+	1 Underground Mortuary
+	1 Underrealm Lich
+	1 Unnatural Predation
+	1 Urborg, Tomb of Yawgmoth
+	1 Vanquisher's Banner
+	1 Verdant Catacombs
+	1 Vesuva
+	1 Woodland Cemetery
+	1 Woodland Chasm
+	1 Yavimaya, Cradle of Growth
+
+	//Sideboard
+	1 Aphotic Wisps
+	1 Ayara, First of Locthwain
+	1 Braids, Arisen Nightmare
+	1 Celeborn the Wise
+	1 Copperhorn Scout
+	1 Disciple of Freyalise // Garden of Freyalise
+	1 Duskwielder
+	1 Elderfang Venom
+	1 Elderleaf Mentor
+	1 Elvish Piper
+	1 Elvish Reclaimer
+	1 Elvish Skysweeper
+	1 Gaea's Gift
+	1 Glowspore Shaman
+	1 Gnarlroot Trapper
+	1 Golgari Guildgate
+	1 Greenseeker
+	1 Heritage Druid
+	1 Jungle Hollow
+	1 Matzalantli, the Great Door // The Core
+	1 Miara, Thorn of the Glade
+	1 Nettle Sentinel
+	1 Nurturer Initiate
+	1 Opal Palace
+	1 Pelt Collector
+	1 Ravenous Squirrel
+	1 Savra, Queen of the Golgari
+	1 Shaman of the Pack
+	1 Shessra, Death's Whisper
+	1 Sol Ring
+	1 Tajuru Blightblade
+	1 Thornbow Archer
+	1 Twinblade Slasher
+	1 Undergrowth Stadium
+	1 Yeva, Nature's Herald
+
+	</pre>
+	</details>
+</div>
+
+<div id="snackbar">Deck copié dans le presse-papier !</div>
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		document.querySelector('[data-copy-deck]').addEventListener('click', () => {
+			navigator.clipboard.writeText(
+				document.querySelector('[data-deck-code]').textContent
+			);
+			const toast = document.getElementById('snackbar');
+			toast.classList.add('show');
+			setTimeout(() => {
+				toast.classList.remove('show');
+			}, 3000);
+		});
+	});
+</script>
+
+</body>
+</html>
