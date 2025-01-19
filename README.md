@@ -14,3 +14,9 @@ Pour le nom du fichier, mettre le code de l'extension principale du deck (s'il y
    Il est générable via cockatrice : `Éditeur de deck -> Copier le deck dans le presse-papier -> Avec annotations`.
 3. Ouvrir le fichier dans son navigateur pour vérifier que tout s'affiche bien 
 4. Commiter et ouvrir la PR vers le repo principal
+
+
+# Liens utiles
+
+- https://keyrune.andrewgioia.com/
+- https://github.com/micku/mana-cost
