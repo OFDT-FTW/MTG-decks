@@ -298,6 +298,7 @@
 	});
 	const DeckType = Object.freeze({
 		...enumMethods,
+		ALL: enumValue('DeckType.All'),
 		COMMANDER: enumValue('DeckType.COMMANDER'),
 		TRIBAL: enumValue('DeckType.TRIBAL'),
 		// Took from https://edhrec.com/tags
@@ -736,12 +737,13 @@
 		CARDS_BY_NAME[name] = new Card(name, deckTypes);
 	}
 
+	addCard('Sol Ring', DeckType.ALL);
+
 	addCard('Arcane Signet', DeckType.COMMANDER);
 	addCard('Commander\'s Sphere', DeckType.COMMANDER);
 	addCard('Command Tower', DeckType.COMMANDER);
 	addCard('Path of Ancestry', DeckType.COMMANDER);
 	addCard('Opal Palace', DeckType.COMMANDER);
-	addCard('Sol Ring', DeckType.COMMANDER);
 
 	addCard('Door of Destinies', DeckType.TRIBAL);
 	addCard('Herald\'s Horn', DeckType.TRIBAL);
@@ -868,7 +870,9 @@
 		deckTypeSelect.setAttribute('data-deck-type-select', '');
 		deckTypeSelect.add(new Option('Choisi un type de deck', ''));
 		DeckType.values().sort((deckTypeA, deckTypeB) => deckTypeA.text.localeCompare(deckTypeB.text)).forEach(deckType => {
-			deckTypeSelect.add(new Option(deckType.text, deckType.name));
+			if (deckType.name !== DeckType.ALL.name) {
+				deckTypeSelect.add(new Option(deckType.text, deckType.name));
+			}
 		});
 		deckTypeSelect.addEventListener('change', filterCards);
 
@@ -887,11 +891,16 @@
 				|| filteredColors.filter(filteredColor => {
 					return card.colors.some(color => color.name === Color.from(filteredColor).name);
 				}).length === filteredColors.length;
+
 			const legalityMatch = filteredLegalities.length === 0
 				|| filteredLegalities.filter(filteredLegality => {
 					return card.legalityStateByLegality[Legality.from(filteredLegality)].name === LegalityState.LEGAL.name;
 				}).length === filteredLegalities.length;
-			return colorMatch && legalityMatch && (!filteredDeckType || card.deckTypes.includes(DeckType.from(filteredDeckType)));
+
+			const deckTypeMatch = !filteredDeckType
+				|| card.deckTypes.some(deckType => [DeckType.ALL.name, filteredDeckType].includes(deckType.name));
+
+			return colorMatch && legalityMatch && deckTypeMatch;
 		});
 
 		document.querySelector('[data-cards-filtered-count]').textContent = `${Object.keys(filteredCards).length}`;
