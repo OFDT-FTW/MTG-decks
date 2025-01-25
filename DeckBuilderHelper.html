@@ -5,6 +5,8 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+	<!--Bootstrap icons -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 	<style>
 		#spinner-overlay {
@@ -195,6 +197,14 @@
 	<title>Aide de construction pour trouver des cartes essentielles</title>
 </head>
 
+<!--
+
+TODO
+	Les cartes restreintes doivent sortir mais avec un badge indiquant les raisons
+	Mettre un select multiple pour le DeckType. Exemple : Elf + tribal sortirait toutes les cartes pour elfe et tribal
+
+-->
+
 <body>
 <div class="container d-flex flex-column p-4">
 	<div id="spinner-overlay" class="flex-column">
@@ -295,6 +305,7 @@
 		LEGAL: enumValue('LegalityState.LEGAL'),
 		NOT_LEGAL: enumValue('LegalityState.NOT_LEGAL'),
 		BANNED: enumValue('LegalityState.BANNED'),
+		RESTRICTED: enumValue('LegalityState.RESTRICTED'),
 	});
 	const DeckType = Object.freeze({
 		...enumMethods,
@@ -753,7 +764,6 @@
 
 	// https://scryfall.com/docs/api/
 	const SCRYFALL_URL = 'https://api.scryfall.com';
-	const LOADED_CARD_LOCAL_STORAGE_KEY = 'deckBuilderHelpers_loadedCards';
 
 	document.addEventListener('DOMContentLoaded', () => {
 		showSpinner('Getting cards data from Scryfall…');
@@ -765,7 +775,7 @@
 
 	let cardsDoneCount = 0;
 	function recursiveScryfallCall(page = 1) {
-		const alreadyLoadedCardsByName = JSON.parse(localStorage.getItem(LOADED_CARD_LOCAL_STORAGE_KEY) ?? JSON.stringify([]));
+		const alreadyLoadedCardsByName = getCardsByNameFromLocalStorage();
 
 		const cardToRetrieve = [];
 
@@ -796,7 +806,7 @@
 		});
 
 		if (cardToRetrieve.length === 0) {
-			localStorage.setItem(LOADED_CARD_LOCAL_STORAGE_KEY, JSON.stringify(CARDS_BY_NAME));
+			setCardsByNameInLocalStorage(CARDS_BY_NAME);
 			return Promise.resolve();
 		}
 
@@ -818,12 +828,27 @@
 						reject('Expected card count: ' + Object.keys(cardToRetrieve).length
 							+ ', card done count: ' + cardsDoneCount);
 					} else {
-						localStorage.setItem(LOADED_CARD_LOCAL_STORAGE_KEY, JSON.stringify(CARDS_BY_NAME));
+						setCardsByNameInLocalStorage(CARDS_BY_NAME);
 						resolve();
 					}
 				}
 			});
 		});
+	}
+
+	/**
+	 * @return {Object<string, Card>}
+	 */
+	function getCardsByNameFromLocalStorage() {
+		return JSON.parse(localStorage.getItem('deckBuilderHelpers_loadedCards') ?? JSON.stringify([]));
+	}
+
+	/**
+	 * @param {Object<string, Card>} cardsByName
+	 */
+	function setCardsByNameInLocalStorage(cardsByName) {
+		localStorage.setItem('deckBuilderHelpers_loadedCards', JSON.stringify(cardsByName));
+		console.info('Card saved in local storage: ', Object.values(cardsByName));
 	}
 
 	function generateFilters() {
@@ -875,6 +900,22 @@
 			}
 		});
 		deckTypeSelect.addEventListener('change', filterCards);
+
+		const deckTypeInfoContainer = document.createElement('div');
+		deckTypeContainer.append(deckTypeInfoContainer);
+		deckTypeInfoContainer.classList.add('col-6');
+		deckTypeInfoContainer.innerHTML = `
+			<div class="">
+				<a
+					href="https://mtg.fandom.com/wiki/List_of_Magic_slang" target="_blank"
+					class="btn btn-info"
+				>Liste des termes sur le wiki MTG <i class="bi bi-box-arrow-up-right"></i></a>
+				<a
+					href="https://edhrec.com/tags" target="_blank"
+					class="btn btn-info"
+				>Liste des tags sur EDHREC <i class="bi bi-box-arrow-up-right"></i></a>
+			</div>
+		`;
 
 		filterCards();
 	}
