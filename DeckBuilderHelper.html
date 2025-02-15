@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
 	<meta charset="UTF-8">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -7,6 +7,15 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 	<!--Bootstrap icons -->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+	<!-- jQuery (please use it only for specific libraries)  -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+	<!-- https://select2.org -->
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+	<!-- https://apalfrey.github.io/select2-bootstrap-5-theme/ -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
 
 	<style>
 		#spinner-overlay {
@@ -197,14 +206,6 @@
 	<title>Aide de construction pour trouver des cartes essentielles</title>
 </head>
 
-<!--
-
-TODO
-	Les cartes restreintes doivent sortir mais avec un badge indiquant les raisons
-	Mettre un select multiple pour le DeckType. Exemple : Elf + tribal sortirait toutes les cartes pour elfe et tribal
-
--->
-
 <body>
 <div class="container d-flex flex-column p-4">
 	<div id="spinner-overlay" class="flex-column">
@@ -222,7 +223,7 @@ TODO
 		Résultat
 		<span class="badge text-bg-secondary">
 			<span data-cards-filtered-count>…</span>
-			 cartes filtrées
+			<span data-cards-filtered-count-message></span>
 		</span>
 	</h2>
 	<div data-result-container></div>
@@ -241,20 +242,53 @@ TODO
 		document.getElementById('spinner-overlay').style.display = 'none';
 	}
 
+	/**
+	 * Factory function to create an enumerable value object with additional properties and calculated values.
+	 *
+	 * @function
+	 * @param {string} name - The unique name identifier for the enum value.
+	 * @param {Object} [otherAttributes={}] - Additional properties to customize the enum value.
+	 * @returns {Object} A frozen enum value object containing properties such as `name`, `text`, `color`, `toString`, `valueOf`, `colorStyle`, and `span`.
+	 */
 	const enumValue = (name, otherAttributes = {}) => {
+		// Default values
 		let object = {
 			name: name,
 			text: otherAttributes.text ?? name.split('.').pop().split('_')
 				.map(word => word.charAt(0) + word.slice(1).toLowerCase()) // Capitalize the start of each word
 				.join(' '),
-			toString: () => name,
-			valueOf: () => name,
+			color: otherAttributes.color ?? stringToHexColor(name),
 		};
+
+		// Calculated values
+		object.toString = () => object.name;
+		object.valueOf = () => object.name;
+		object.colorStyle = `background-color: ${object.color}; color: ${isHexLightColor(object.color) ? 'black' : 'white'};`;
+		object.span = `<span class="badge rounded-pill" style="${object.colorStyle}">${object.text}</span>`;
+
+		// Override values
 		for (const [key, value] of Object.entries(otherAttributes)) {
 			object[key] = value
 		}
+
+		// Freeze enum value
 		return Object.freeze(object);
 	};
+
+	/**
+	 * An object containing utility methods for working with enums.
+	 *
+	 * The object provides methods to retrieve an enum value by name
+	 * and to retrieve all enum values in the form of an array of objects.
+	 *
+	 * @property {Function} from - Retrieves an enum value by a case-insensitive name match.
+	 *                              The name can match either the full name of the enum value
+	 *                              or the portion of the name after any preceding dot.
+	 *                              If no match is found, returns null.
+	 * @property {Function} values - Gets all the enum values as an array of objects. It filters
+	 *                                the object's properties to include only those that are
+	 *                                non-null, non-array object values.
+	 */
 	const enumMethods = {
 		from: function (name) {
 			return Object.values(this).find(value =>
@@ -268,37 +302,38 @@ TODO
 
 	const Color = Object.freeze({
 		...enumMethods,
-		RED: enumValue('Colors.RED', {cssClass: 'sr'}),
-		BLUE: enumValue('Colors.BLUE', {cssClass: 'su'}),
-		GREEN: enumValue('Colors.GREEN', {cssClass: 'sg'}),
-		BLACK: enumValue('Colors.BLACK', {cssClass: 'sb'}),
-		WHITE: enumValue('Colors.WHITE', {cssClass: 'sw'}),
-		COLORLESS: enumValue('Colors.COLORLESS', {cssClass: 'sc'}),
+		RED: enumValue('Colors.RED', {cssClass: 'sr', text: 'Rouge'}),
+		BLUE: enumValue('Colors.BLUE', {cssClass: 'su', text: 'Bleu'}),
+		GREEN: enumValue('Colors.GREEN', {cssClass: 'sg', text: 'Vert'}),
+		BLACK: enumValue('Colors.BLACK', {cssClass: 'sb', text: 'Noir'}),
+		WHITE: enumValue('Colors.WHITE', {cssClass: 'sw', text: 'Blanc'}),
+		COLORLESS: enumValue('Colors.COLORLESS', {cssClass: 'sc', text: 'Sans couleur'}),
 	});
-	const Legality = Object.freeze({
+	// Took from scryfall card data: the legalities keys
+	const Format = Object.freeze({
 		...enumMethods,
-		STANDARD: enumValue('Legality.STANDARD'),
-		FUTURE: enumValue('Legality.FUTURE'),
-		HISTORIC: enumValue('Legality.HISTORIC'),
-		TIMELESS: enumValue('Legality.TIMELESS'),
-		GLADIATOR: enumValue('Legality.GLADIATOR'),
-		PIONEER: enumValue('Legality.PIONEER'),
-		EXPLORER: enumValue('Legality.EXPLORER'),
-		MODERN: enumValue('Legality.MODERN'),
-		LEGACY: enumValue('Legality.LEGACY'),
-		PAUPER: enumValue('Legality.PAUPER'),
-		VINTAGE: enumValue('Legality.VINTAGE'),
-		PENNY: enumValue('Legality.PENNY'),
-		COMMANDER: enumValue('Legality.COMMANDER'),
-		OATHBREAKER: enumValue('Legality.OATHBREAKER'),
-		STANDARDBRAWL: enumValue('Legality.STANDARDBRAWL', {text: 'Standard Brawl'}),
-		BRAWL: enumValue('Legality.BRAWL'),
-		ALCHEMY: enumValue('Legality.ALCHEMY'),
-		PAUPERCOMMANDER: enumValue('Legality.PAUPERCOMMANDER', {text: 'Pauper Commander'}),
-		DUEL: enumValue('Legality.DUEL'),
-		OLDSCHOOL: enumValue('Legality.OLDSCHOOL', {text: 'Old School'}),
-		PREMODERN: enumValue('Legality.PREMODERN'),
-		PREDH: enumValue('Legality.PREDH', 'PreDH'),
+		STANDARD: enumValue('Format.STANDARD'),
+		FUTURE: enumValue('Format.FUTURE'),
+		HISTORIC: enumValue('Format.HISTORIC', {text: 'Historique'}),
+		TIMELESS: enumValue('Format.TIMELESS'),
+		GLADIATOR: enumValue('Format.GLADIATOR'),
+		PIONEER: enumValue('Format.PIONEER'),
+		EXPLORER: enumValue('Format.EXPLORER', {text: 'Explorateur'}),
+		MODERN: enumValue('Format.MODERN'),
+		LEGACY: enumValue('Format.LEGACY'),
+		PAUPER: enumValue('Format.PAUPER'),
+		VINTAGE: enumValue('Format.VINTAGE'),
+		PENNY: enumValue('Format.PENNY'),
+		COMMANDER: enumValue('Format.COMMANDER'),
+		OATHBREAKER: enumValue('Format.OATHBREAKER'),
+		STANDARDBRAWL: enumValue('Format.STANDARDBRAWL', {text: 'Standard Brawl'}),
+		BRAWL: enumValue('Format.BRAWL'),
+		ALCHEMY: enumValue('Format.ALCHEMY'),
+		PAUPERCOMMANDER: enumValue('Format.PAUPERCOMMANDER', {text: 'Pauper Commander'}),
+		DUEL: enumValue('Format.DUEL'),
+		OLDSCHOOL: enumValue('Format.OLDSCHOOL', {text: 'Old School'}),
+		PREMODERN: enumValue('Format.PREMODERN'),
+		PREDH: enumValue('Format.PREDH', 'PreDH'),
 	});
 	const LegalityState = Object.freeze({
 		...enumMethods,
@@ -645,7 +680,10 @@ TODO
 		name;
 		/** @type {DeckType[]} */
 		deckTypes;
-		/** @type {Object} */
+		/**
+		 * @type {Object}
+		 * @see https://scryfall.com/docs/api/cards#core-card-fields Scryfall API Core Card Fields
+		 */
 		rawScryfallData;
 
 		constructor(name, deckTypes) {
@@ -653,6 +691,9 @@ TODO
 			this.deckTypes = deckTypes;
 		}
 
+		/**
+		 * @return {Color[]}
+		 */
 		get colors() {
 			if (this.rawScryfallData.colors.length === 0) {
 				return [Color.COLORLESS];
@@ -680,42 +721,76 @@ TODO
 			return colors;
 		}
 
-		get legalityStateByLegality() {
+		/**
+		 * @return {Object<formatName: string, LegalityState>}
+		 */
+		get legalityStateByFormat() {
 			const legalities = {};
 			for (const [legality, legalityState] of Object.entries(this.rawScryfallData['legalities'])) {
-				legalities[Legality.from(legality).name] = LegalityState.from(legalityState);
+				legalities[Format.from(legality).name] = LegalityState.from(legalityState);
 			}
 			return legalities;
 		}
 
+		/**
+		 * @return {string}
+		 */
 		get imageUri() {
 			return this.rawScryfallData['image_uris']['large'];
 		}
 
+		/**
+		 * @return {string}
+		 */
 		get scryfallUri() {
 			return this.rawScryfallData['scryfall_uri'];
 		}
 
+		/**
+		 * @return {string}
+		 */
 		get id () {
 			return this.rawScryfallData['id'];
 		}
 
-		get nameFr() {
-			return this.rawScryfallData['printed_name'];
+		/**
+		 * @return {string}
+		 */
+		get englishName() {
+			return this.rawScryfallData['name'];
 		}
 
+		/**
+		 * @return {string}
+		 */
+		get printedName() {
+			return this.rawScryfallData['printed_name'] ?? this.englishName;
+		}
+
+		/**
+		 * @return {string}
+		 */
 		get printedType() {
 			return this.rawScryfallData['printed_type_line'];
 		}
 
+		/**
+		 * @return {string}
+		 */
 		get printedText() {
-			return this.rawScryfallData['printed_text'];
+			return this.rawScryfallData['printed_text'] ?? this.rawScryfallData['oracle_text'];
 		}
 
+		/**
+		 * @return {string|null}
+		 */
 		get flavorText() {
 			return this.rawScryfallData['flavor_text'] ?? null;
 		}
 
+		/**
+		 * @return {string}
+		 */
 		get manaCost() {
 			return this.rawScryfallData['mana_cost'];
 		}
@@ -745,39 +820,72 @@ TODO
 	/** @type {Object<string, Card>} */
 	const CARDS_BY_NAME = {};
 	function addCard(name, ...deckTypes) {
+		if (deckTypes.includes(DeckType.ALL) && deckTypes.length > 1) {
+			const errorMessage = `Card "${name}" has an ALL deck type, so no need to put other deckTypes.`;
+			alert(errorMessage);
+			throw new Error(errorMessage);
+		}
+		if (new Set(deckTypes).size !== deckTypes.length) {
+			const duplicateDeckTypes = deckTypes.filter((deckType, index, array) => array.indexOf(deckType) !== index);
+			const errorMessage = `Card "${name}" has duplicate deckTypes: ${duplicateDeckTypes.join(', ')}.`;
+			alert(errorMessage);
+			throw new Error(errorMessage);
+		}
 		CARDS_BY_NAME[name] = new Card(name, deckTypes);
 	}
 
-	addCard('Sol Ring', DeckType.ALL);
+	// Add your cards here. If the card does not exist in the desired language, put it in english
+	// Cards will be search using the "fuzzy" field of https://scryfall.com/docs/api/cards/named
 
-	addCard('Arcane Signet', DeckType.COMMANDER);
-	addCard('Commander\'s Sphere', DeckType.COMMANDER);
-	addCard('Command Tower', DeckType.COMMANDER);
-	addCard('Path of Ancestry', DeckType.COMMANDER);
-	addCard('Opal Palace', DeckType.COMMANDER);
+	addCard(`Anneau solaire`, DeckType.ALL);
 
-	addCard('Door of Destinies', DeckType.TRIBAL);
-	addCard('Herald\'s Horn', DeckType.TRIBAL);
-	addCard('Patchwork Banner', DeckType.TRIBAL);
-	addCard('Vanquisher\'s Banner', DeckType.TRIBAL);
-	addCard('Three Tree City', DeckType.TRIBAL);
+	addCard(`Cachet d'ésotérisme`, DeckType.COMMANDER);
+	addCard(`Sphère du commandant`, DeckType.COMMANDER);
+	addCard(`Tour de commandement`, DeckType.COMMANDER);
+	addCard(`Voie de l'Ascendance`, DeckType.COMMANDER);
+	addCard(`Palais d'opale`, DeckType.COMMANDER);
+
+	addCard(`Porte des Destinées`, DeckType.TRIBAL);
+	addCard(`Cor du héraut`, DeckType.TRIBAL);
+	addCard(`Bannière en patchwork`, DeckType.TRIBAL);
+	addCard(`Bannière du vainqueur`, DeckType.TRIBAL);
+	addCard(`Cité des Trois arbres`, DeckType.TRIBAL);
 
 	// https://scryfall.com/docs/api/
 	const SCRYFALL_URL = 'https://api.scryfall.com';
 
 	document.addEventListener('DOMContentLoaded', () => {
-		showSpinner('Getting cards data from Scryfall…');
-		recursiveScryfallCall()
-			.then(generateFilters)
+		showSpinner('Recupération des cartes non déjà chargées localement…');
+		retrieveCardsDataFromScryfall()
+			.then(scryfallCardData => {
+				scryfallCardData.forEach(card => {
+					CARDS_BY_NAME[card['printed_name'] ?? card.name].rawScryfallData = card;
+				});
+				setCardsByNameInLocalStorage(CARDS_BY_NAME);
+				generateFilters();
+			})
 			.catch(console.error)
 			.finally(hideSpinner);
 	});
 
-	let cardsDoneCount = 0;
-	function recursiveScryfallCall(page = 1) {
+	/**
+	 * @param {string} cardName Search through Scryfall API with the specific name but with the fuzzy parameter
+	 * @return {Promise<Object[]>} Object being the raw Scryfall data
+	 */
+	function getScryfallDataOfOneCardPromise(cardName) {
+		return fetch(`${SCRYFALL_URL}/cards/named?` + new URLSearchParams({
+			fuzzy: cardName,
+		}).toString()).then(response => response.json());
+	}
+
+	/**
+	 * Only retrieve the cards that have not yet been loaded
+	 * @return {Promise<Awaited<*[]>>}
+	 */
+	async function retrieveCardsDataFromScryfall() {
 		const alreadyLoadedCardsByName = getCardsByNameFromLocalStorage();
 
-		const cardToRetrieve = [];
+		const cardNamesToRetrieve = [];
 
 		// If alreadyLoadedCardsByName is obsolete
 		for (const [name, card] of Object.entries(alreadyLoadedCardsByName)) {
@@ -791,7 +899,7 @@ TODO
 						card.deckTypes.some(saveCardDeckType => cardInPageDeckType.name === saveCardDeckType.name)
 					)
 				) {
-					cardToRetrieve.push(name);
+					cardNamesToRetrieve.push(name);
 				} else {
 					CARDS_BY_NAME[name] = Object.assign(new Card(), card);
 				}
@@ -801,46 +909,39 @@ TODO
 		// If CARDS_BY_NAME entry does not exist in alreadyLoadedCardsByName
 		Object.keys(CARDS_BY_NAME).forEach(name => {
 			if (!alreadyLoadedCardsByName[name]) {
-				cardToRetrieve.push(name);
+				cardNamesToRetrieve.push(name);
 			}
 		});
 
-		if (cardToRetrieve.length === 0) {
-			setCardsByNameInLocalStorage(CARDS_BY_NAME);
-			return Promise.resolve();
+		if (cardNamesToRetrieve.length === 0) {
+			return Promise.resolve([]);
 		}
 
-		return new Promise((resolve, reject) => {
-			fetch(`${SCRYFALL_URL}/cards/search?` + new URLSearchParams({
-				q: 'lang:fr (' + Object.values(cardToRetrieve)
-					.map(cardName => `!"${cardName}"`)
-					.join(' or ') + ')',
-				page: page,
-			}).toString()).then(response => response.json()).then(json => {
-				json.data.forEach(card => {
-					CARDS_BY_NAME[card.name].rawScryfallData = card;
-				});
-				cardsDoneCount += json['total_cards'];
-				if (json['has_more']) {
-					recursiveScryfallCall(page + 1).then(resolve);
-				} else {
-					if (cardsDoneCount !== Object.keys(cardToRetrieve).length) {
-						reject('Expected card count: ' + Object.keys(cardToRetrieve).length
-							+ ', card done count: ' + cardsDoneCount);
-					} else {
-						setCardsByNameInLocalStorage(CARDS_BY_NAME);
-						resolve();
-					}
-				}
-			});
-		});
+		const scryfallCardsData = [];
+		for (let i = 0; i < cardNamesToRetrieve.length; i++){
+			const cardName = cardNamesToRetrieve[i];
+			showSpinner(`Recupération des cartes non déjà chargées localement… (${i+1}/${cardNamesToRetrieve.length})`);
+			scryfallCardsData.push(await getScryfallDataOfOneCardPromise(cardName));
+			// Wait 100ms because API requests it: https://scryfall.com/docs/api#rate-limits-and-good-citizenship
+			await new Promise(resolve => setTimeout(resolve, 100));
+		}
+		return Promise.resolve(scryfallCardsData);
 	}
 
 	/**
 	 * @return {Object<string, Card>}
 	 */
 	function getCardsByNameFromLocalStorage() {
-		return JSON.parse(localStorage.getItem('deckBuilderHelpers_loadedCards') ?? JSON.stringify([]));
+		/** @type {Object<string, Card>} */
+		const savedCards = JSON.parse(localStorage.getItem('deckBuilderHelpers_loadedCards') ?? JSON.stringify([]));
+
+		const cardsByName = {};
+		Object.values(savedCards).forEach(card => {
+			// In case the enum have changed
+			card.deckTypes = card.deckTypes.map(deckType => DeckType.from(deckType.name));
+			cardsByName[card.name] = card;
+		});
+		return cardsByName;
 	}
 
 	/**
@@ -851,6 +952,9 @@ TODO
 		console.info('Card saved in local storage: ', Object.values(cardsByName));
 	}
 
+	/**
+	 * Generate all filters base on the enums values and the cards loaded
+	 */
 	function generateFilters() {
 		const filterContainer = document.querySelector('[data-filter-container]');
 
@@ -873,10 +977,17 @@ TODO
 		filterContainer.append(legalityContainer);
 		legalityContainer.classList.add('my-3');
 		legalityContainer.setAttribute('data-legality-container', '');
-		Legality.values().sort((legalityA, legalityB) => legalityA.text.localeCompare(legalityB.text)).forEach(legality => {
+		legalityContainer.innerHTML = `<h4 class="d-flex justify-content-between">
+			Formats (selon Scryfall)
+			<div>
+				<a href="https://magic.wizards.com/fr/formats" class="btn btn-info btn-sm" target="_blank">Formats officiels <i class="bi bi-box-arrow-up-right"></i></a>
+				<a href="https://en.wikipedia.org/wiki/Magic:_The_Gathering_formats" class="btn btn-info btn-sm" target="_blank">Wikipédia <i class="bi bi-box-arrow-up-right"></i></a>
+			</div>
+		</h4>`;
+		Format.values().sort((legalityA, legalityB) => legalityA.text.localeCompare(legalityB.text)).forEach(legality => {
 			legalityContainer.innerHTML += `
 				<input type="checkbox" class="btn-check" id="${legality.name}" data-legality="${legality.name}">
-				<label class="btn btn-outline-secondary mt-1" for="${legality.name}">${legality.text}</label>
+				<label class="btn btn-outline-secondary mt-1 text-nowrap" for="${legality.name}">${legality.text}</label>
 			`;
 		});
 		Array.from(legalityContainer.querySelectorAll('input[type="checkbox"]')).forEach(checkbox => checkbox.addEventListener('change', filterCards));
@@ -891,15 +1002,20 @@ TODO
 
 		const deckTypeSelect = document.createElement('select');
 		deckTypeSelectContainer.append(deckTypeSelect);
-		deckTypeSelect.classList.add('form-select');
 		deckTypeSelect.setAttribute('data-deck-type-select', '');
-		deckTypeSelect.add(new Option('Choisi un type de deck', ''));
+		deckTypeSelect.setAttribute('multiple', '');
 		DeckType.values().sort((deckTypeA, deckTypeB) => deckTypeA.text.localeCompare(deckTypeB.text)).forEach(deckType => {
 			if (deckType.name !== DeckType.ALL.name) {
 				deckTypeSelect.add(new Option(deckType.text, deckType.name));
 			}
 		});
 		deckTypeSelect.addEventListener('change', filterCards);
+		$(deckTypeSelect).select2({
+			dropdownAutoWidth: true,
+			placeholder: 'Choisi des types de deck',
+			width: '100%',
+			theme: 'bootstrap-5',
+		}).on('change', filterCards);
 
 		const deckTypeInfoContainer = document.createElement('div');
 		deckTypeContainer.append(deckTypeInfoContainer);
@@ -925,7 +1041,7 @@ TODO
 			.map(checkbox => checkbox.getAttribute('data-color'));
 		const filteredLegalities = Array.from(document.querySelectorAll('[data-legality-container] input[type="checkbox"]:checked'))
 			.map(checkbox => checkbox.getAttribute('data-legality'));
-		const filteredDeckType = document.querySelector('[data-deck-type-select] option:checked').value;
+		const filteredDeckTypeNames = $('[data-deck-type-select]').select2('val');
 
 		const filteredCards = Object.values(CARDS_BY_NAME).filter(card => {
 			const colorMatch = filteredColors.length === 0
@@ -934,37 +1050,112 @@ TODO
 				}).length === filteredColors.length;
 
 			const legalityMatch = filteredLegalities.length === 0
-				|| filteredLegalities.filter(filteredLegality => {
-					return card.legalityStateByLegality[Legality.from(filteredLegality)].name === LegalityState.LEGAL.name;
+				|| filteredLegalities.filter(filteredFormat => {
+					return ![
+						LegalityState.NOT_LEGAL.name,
+						LegalityState.BANNED.name,
+					].includes(card.legalityStateByFormat[Format.from(filteredFormat).name].name);
 				}).length === filteredLegalities.length;
 
-			const deckTypeMatch = !filteredDeckType
-				|| card.deckTypes.some(deckType => [DeckType.ALL.name, filteredDeckType].includes(deckType.name));
+			const deckTypeMatch = filteredDeckTypeNames.length === 0
+				|| card.deckTypes.some(deckType => [DeckType.ALL.name, ...filteredDeckTypeNames].includes(deckType.name));
 
 			return colorMatch && legalityMatch && deckTypeMatch;
+		}).sort((cardA, cardB) => {
+			const localCompare = cardA.printedName.localeCompare(cardB.printedName);
+			if (filteredDeckTypeNames.length === 0) {
+				return localCompare;
+			}
+
+			// If ALL deck type, go at the end
+			const doesCardAHaveAllDeckType = cardA.deckTypes.some(deckType => deckType.name === DeckType.ALL.name);
+			const doesCardBHaveAllDeckType = cardB.deckTypes.some(deckType => deckType.name === DeckType.ALL.name);
+			if (doesCardAHaveAllDeckType) {
+				if (doesCardBHaveAllDeckType) {
+					return localCompare;
+				} else {
+					return 1;
+				}
+			} else if (doesCardBHaveAllDeckType) {
+				return 1;
+			}
+
+			// Priority over number of matching filters selected
+			const matchingDeckTypesA = cardA.deckTypes.filter(deckType => filteredDeckTypeNames.includes(deckType.name));
+			const matchingDeckTypesB = cardB.deckTypes.filter(deckType => filteredDeckTypeNames.includes(deckType.name));
+
+			if (matchingDeckTypesA.length !== matchingDeckTypesB.length) {
+				return matchingDeckTypesB.length - matchingDeckTypesA.length;
+			}
+
+			// Priority over deck matching type name
+			const higherDeckTypeA = matchingDeckTypesA.sort((deckTypeA, deckTypeB) => deckTypeA.name.localeCompare(deckTypeB.name))[0];
+			const higherDeckTypeB = matchingDeckTypesB.sort((deckTypeA, deckTypeB) => deckTypeA.name.localeCompare(deckTypeB.name))[0];
+
+			if (higherDeckTypeA.name !== higherDeckTypeB.name) {
+				return higherDeckTypeA.name.localeCompare(higherDeckTypeB.name);
+			}
+
+			return localCompare;
 		});
 
 		document.querySelector('[data-cards-filtered-count]').textContent = `${Object.keys(filteredCards).length}`;
+		document.querySelector('[data-cards-filtered-count-message]').textContent = Object.keys(filteredCards).length === 1
+				? 'carte filtrée'
+				: 'cartes filtrées';
 
 		const resultContainer = document.querySelector('[data-result-container]');
 		resultContainer.innerHTML = '';
 
 		const cardContainer = document.createElement('div');
 		resultContainer.append(cardContainer);
-		cardContainer.classList.add('row', 'row-cols-5', 'row-cols-xl-7', 'row-cols-lg-5', 'row-cols-md-3', 'row-cols-sm-2', 'g-4');
+		cardContainer.classList.add('row', 'row-cols-5', 'row-cols-xl-7', 'row-cols-lg-5', 'row-cols-md-3', 'row-cols-sm-2', 'g-4', 'pt-1');
 
 		Object.values(filteredCards).forEach(card => {
 			const cardDiv = document.createElement('div');
 			cardContainer.append(cardDiv);
+			let relevantDeckTypeDiv = null;
+			if (filteredDeckTypeNames.length > 0) {
+				const relevantCardDeckTypeSpans = card.deckTypes
+					.filter(deckType => [DeckType.ALL.name, ...filteredDeckTypeNames].includes(deckType.name))
+					.sort((deckTypeA, deckTypeB) => deckTypeA.name.localeCompare(deckTypeB.name))
+					.map(deckType => deckType.span);
+				relevantDeckTypeDiv = `
+					<div class="gap-2 d-flex px-0 justify-content-around">${relevantCardDeckTypeSpans.join('')}</div>
+				`;
+			}
+			let restrictedBadge = '';
+			if (filteredLegalities.length > 0) {
+				const restrictedLegalities = [];
+				for (const [legality, legalityState] of Object.entries(card.legalityStateByFormat)) {
+					if (filteredLegalities.includes(legality) && legalityState.name === LegalityState.RESTRICTED.name) {
+						restrictedLegalities.push(Format.from(legality));
+					}
+				}
+				if (restrictedLegalities.length > 0) {
+					restrictedBadge = `
+					<span
+						class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-danger"
+						data-bs-toggle="tooltip" data-bs-placement="bottom"
+						data-bs-title="Cette carte est restreinte dans les formats suivants : ${restrictedLegalities.map(legality => legality.text).join(', ')}"
+					>
+						Restricted
+					</span>
+					`;
+				}
+			}
+			// vintage
 			cardDiv.outerHTML = `
 				<div class="col">
 					<div class="card">
 						<a target="_blank" href="${card.scryfallUri}">
+							${restrictedBadge}
 							<img src="${card.imageUri}" class="card-img-top" alt="${card.name}">
 						</a>
 						<div class="card-footer">
+							${relevantDeckTypeDiv ? `<div class="row mb-1" title="Types de decks">${relevantDeckTypeDiv}</div>` : ''}
 							<div class="d-flex justify-content-between row gap-2">
-								<button class="col btn btn-secondary text-nowrap" onclick="copyToClipboard(\`${card.name}\`)">Copier nom</button>
+								<button class="col btn btn-secondary text-nowrap" onclick="copyToClipboard(\`${card.englishName}\`)">Copier nom</button>
 								<button class="col btn btn-secondary" data-bs-toggle="modal" data-bs-target="#card-${card.id}">
 									Détails
 								</button>
@@ -976,6 +1167,10 @@ TODO
 
 			const cardModal = document.createElement('div');
 			cardContainer.append(cardModal);
+			const deckTypesAsHtml = [];
+			card.deckTypes.forEach(deckType => {
+				deckTypesAsHtml.push(`<span class="badge" style="${deckType.colorStyle}">${deckType.text}</span>`);
+			});
 			cardModal.outerHTML = `
 				<div class="modal fade" id="card-${card.id}" tabindex="-1" aria-labelledby="${card.name}" aria-hidden="true">
 					<div class="modal-dialog">
@@ -983,7 +1178,7 @@ TODO
 							<div class="modal-header">
 								<div class="w-100">
 									<h1 class="modal-title fs-5 text-nowrap justify-content-between d-flex">
-										<div>${card.name} / ${card.nameFr}</div>
+										<div>${Array.from(new Set([card.name, card.printedName])).join(' / ')}</div>
 										<div>${mtgTextToHtml(card.manaCost)}</div>
 									</h1>
 									<div class="d-flex justify-content-between text-body-secondary fs-6 fw-light gap-4">
@@ -996,8 +1191,8 @@ TODO
 							</div>
 							${card.flavorText !== null ? `<div class="modal-body border-top fst-italic fw-light">${mtgTextToHtml(card.flavorText)}</div>` : ``}
 							<div class="modal-body border-top">
-								<p>Used in the following deck types</p>
-								<p>${card.deckTypes.map(deckType => deckType.text).join(', ')}</p>
+								<p>Utilisé dans les types de deck suivants :</p>
+								<div>${deckTypesAsHtml.join(' ')}</div>
 							</div>
 							<div class="modal-footer d-flex justify-content-between">
 								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -1006,10 +1201,14 @@ TODO
 					</div>
 				</div>
 			`;
+			refreshTooltips();
 		});
 	}
 
 	let clipboardTimeoutId = null;
+	/**
+	 * @param {string} toCopy
+	 */
 	function copyToClipboard(toCopy) {
 		const toast = document.getElementById('snackbar');
 		toast.classList.remove('show');
@@ -1022,6 +1221,42 @@ TODO
 			toast.textContent = ``;
 			clipboardTimeoutId = null;
 		}, 3000);
+	}
+
+	/**
+	 * Took from https://stackoverflow.com/a/16348977/5649527
+	 * @param {string} str
+	 * @return {string}
+	 */
+	function stringToHexColor(str) {
+		let hash = 0;
+		str.split('').forEach(char => {
+			hash = char.charCodeAt(0) + ((hash << 5) - hash)
+		})
+		let colour = '#'
+		for (let i = 0; i < 3; i++) {
+			const value = (hash >> (i * 8)) & 0xff
+			colour += value.toString(16).padStart(2, '0');
+		}
+		return colour
+	}
+
+	/**
+	 * Took from https://stackoverflow.com/a/51567564/5649527
+	 * @param {string} color
+	 * @return {boolean}
+	 */
+	function isHexLightColor(color) {
+		const hex = color.replace('#', '');
+		const c_r = parseInt(hex.substring(0, 2), 16);
+		const c_g = parseInt(hex.substring(2, 2), 16);
+		const c_b = parseInt(hex.substring(4, 2), 16);
+		const brightness = ((c_r * 299) + (c_g * 587) + (c_b * 114)) / 1000;
+		return brightness > 155;
+	}
+
+	function refreshTooltips() {
+		Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]')).map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
 	}
 
 </script>
