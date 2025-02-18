@@ -926,7 +926,8 @@
 				scryfallCardData.forEach(card => {
 					const cardName = card['printed_name'] ?? card.name;
 					if (!(cardName in CARDS_BY_NAME)) {
-						alert(`La carte "${cardName}" a été mal rajouté (peut-être une typo). Vérifie stp.`);
+						alert(`Pas de correspondance exacte pour la carte "${cardName}". Scryfall a trouvé "${cardName}", est-ce que c'est cette carte dont il s'agit ?`
+							+ ` Si oui, il faut mettre le nom exact dans la fonction addCard.`);
 						return;
 					}
 					CARDS_BY_NAME[cardName].rawScryfallData = card;
@@ -1041,7 +1042,7 @@
 				</label>
 			`;
 		});
-		filterContainer.innerHTML += `<div class="text-body-secondary fst-italic">Le filtre des couleurs est stricte (comme pour les identités de couleur commandeur)</div>`;
+		filterContainer.innerHTML += `<div class="text-body-secondary fst-italic">Le filtre des couleurs est strict (comme pour les identités de couleur commandeur)</div>`;
 		Array.from(colorContainer.querySelectorAll('input[type="checkbox"]')).forEach(checkbox => checkbox.addEventListener('change', filterCards));
 
 		const legalityContainer = document.createElement('div');
