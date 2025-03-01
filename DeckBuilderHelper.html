@@ -1034,33 +1034,33 @@
 		colorContainer.classList.add('my-3', 'd-flex', 'gap-1');
 		colorContainer.setAttribute('data-color-container', '');
 		Color.values().sort((colorA, colorB) => colorA.wubrgOrder - colorB.wubrgOrder).forEach(color => {
-			colorContainer.innerHTML += `
+			colorContainer.insertAdjacentHTML('beforeend', `
 				<input type="checkbox" class="btn-check" id="${color.name}" data-color="${color.name}">
 				<label class="btn btn-outline-secondary d-flex flex-grow-0 align-items-center" for="${color.name}">
 					<span class="mana small ${color.cssClass} me-1"></span>
 					${color.text}
 				</label>
-			`;
+			`);
 		});
-		filterContainer.innerHTML += `<div class="text-body-secondary fst-italic">Le filtre des couleurs est strict (comme pour les identités de couleur commandeur)</div>`;
+		filterContainer.insertAdjacentHTML('beforeend', `<div class="text-body-secondary fst-italic">Le filtre des couleurs est strict (comme pour les identités de couleur commandeur)</div>`);
 		Array.from(colorContainer.querySelectorAll('input[type="checkbox"]')).forEach(checkbox => checkbox.addEventListener('change', filterCards));
 
 		const legalityContainer = document.createElement('div');
 		filterContainer.append(legalityContainer);
 		legalityContainer.classList.add('my-3');
 		legalityContainer.setAttribute('data-legality-container', '');
-		legalityContainer.innerHTML = `<h4 class="d-flex justify-content-between">
+		legalityContainer.insertAdjacentHTML('beforeend', `<h4 class="d-flex justify-content-between">
 			Formats (selon Scryfall)
 			<div>
 				<a href="https://magic.wizards.com/fr/formats" class="btn btn-info btn-sm" target="_blank">Formats officiels <i class="bi bi-box-arrow-up-right"></i></a>
 				<a href="https://en.wikipedia.org/wiki/Magic:_The_Gathering_formats" class="btn btn-info btn-sm" target="_blank">Wikipédia <i class="bi bi-box-arrow-up-right"></i></a>
 			</div>
-		</h4>`;
+		</h4>`);
 		Format.values().sort((legalityA, legalityB) => legalityA.text.localeCompare(legalityB.text)).forEach(legality => {
-			legalityContainer.innerHTML += `
+			legalityContainer.insertAdjacentHTML('beforeend', `
 				<input type="checkbox" class="btn-check" id="${legality.name}" data-legality="${legality.name}">
 				<label class="btn btn-outline-secondary mt-1 text-nowrap" for="${legality.name}">${legality.text}</label>
-			`;
+			`);
 		});
 		Array.from(legalityContainer.querySelectorAll('input[type="checkbox"]')).forEach(checkbox => checkbox.addEventListener('change', filterCards));
 
@@ -1092,7 +1092,7 @@
 		const deckTypeInfoContainer = document.createElement('div');
 		deckTypeContainer.append(deckTypeInfoContainer);
 		deckTypeInfoContainer.classList.add('col-6');
-		deckTypeInfoContainer.innerHTML = `
+		deckTypeInfoContainer.insertAdjacentHTML('beforeend', `
 			<div class="">
 				<a
 					href="https://mtg.fandom.com/wiki/List_of_Magic_slang" target="_blank"
@@ -1103,7 +1103,7 @@
 					class="btn btn-info"
 				>Liste des tags sur EDHREC <i class="bi bi-box-arrow-up-right"></i></a>
 			</div>
-		`;
+		`);
 
 		filterCards();
 	}
